@@ -9,7 +9,7 @@ import './style.css'
 // `;
 
 import 'phaser';
-import { menu } from './menu-scene';
+import GameScene from './game-scene';
 
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
@@ -21,7 +21,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
   parent: 'app',
   // `as as Phaser.Types.Scenes.SettingsConfig[]` is required until https://github.com/photonstorm/phaser/pull/6235
-  scene: [menu()] as Phaser.Types.Scenes.SettingsConfig[],
+  scene: [GameScene],
   input: {
     keyboard: true
   },

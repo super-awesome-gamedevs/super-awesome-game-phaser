@@ -3,12 +3,16 @@ import 'phaser';
 import bgUrl from '../assets/bg_layer1.png';
 import platformUrl from '../assets/ground_grass.png';
 import playerUrl from '../assets/bunny1_stand.png';
-
+import carrotUrl from '../assets/carrot.png';
+import Carrot from './game/carrot';
+/*ToDo: Page 42 */
 export const sceneKey = 'GameScene';
 
 export default class GameScene extends Phaser.Scene {
   player!: Phaser.Physics.Arcade.Sprite
   platforms!: Phaser.Physics.Arcade.StaticGroup
+  cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  carrots!: Phaser.Physics.Arcade.Group
 
   constructor() {
     super(sceneKey)
@@ -18,6 +22,8 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('background', bgUrl);
     this.load.image('platform', platformUrl)
     this.load.image('bunny_stand', playerUrl)
+    this.load.image('carrot', carrotUrl)
+    this.cursors = this.input.keyboard!.createCursorKeys()
   }
 
   create() {
@@ -47,6 +53,13 @@ export default class GameScene extends Phaser.Scene {
     this.player.body!.checkCollision.right = false
 
     this.cameras.main.startFollow(this.player)
+
+    this.cameras.main.setDeadzone(this.scale.width * 1.5)
+
+    this.carrots = this.physics.add.group({
+      classType: Carrot
+    })
+    this.physics.add.collider(this.platforms, this.carrots)
   }
 
   update() {
@@ -58,6 +71,8 @@ export default class GameScene extends Phaser.Scene {
       if (platform.y >= scrollY + 700) {
         platform.y = scrollY - Phaser.Math.Between(50, 100)
         platform.body!.updateFromGameObject()
+
+        this.addCarrotAbove(platform)
       }
     })
 
@@ -66,5 +81,35 @@ export default class GameScene extends Phaser.Scene {
     if(touchingDown){
       this.player.setVelocityY(-300)
     }
+
+    if(this.cursors.left.isDown && !touchingDown) {
+      this.player.setVelocityX(-200)
+    }else if(this.cursors.right.isDown && !touchingDown){
+      this.player.setVelocityX(200)
+    }else{
+      this.player.setVelocityX(0)
+    }
+
+    this.horizontalWrap(this.player)
+  }
+
+  horizontalWrap(sprite: Phaser.GameObjects.Sprite) {
+    const halfWidth = sprite.displayWidth * 0.5
+    const gameWidth = this.scale.width
+    if (sprite.x < - halfWidth) {
+      sprite.x = gameWidth + halfWidth
+    } else if (sprite.x > gameWidth + halfWidth) {
+      sprite.x = -halfWidth
+    }
+  }
+
+  addCarrotAbove(sprite: Phaser.GameObjects.Sprite){
+    const y = sprite.y - sprite.displayHeight
+    const carrot = this.carrots.get(sprite.x, y, 'carrot')
+
+    this.add.existing(carrot)
+    carrot.body.setSize(carrot.width, carrot.height)
+
+    return carrot
   }
 }

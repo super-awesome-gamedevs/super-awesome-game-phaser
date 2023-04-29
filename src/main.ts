@@ -10,18 +10,19 @@ import './style.css'
 
 import 'phaser';
 import GameScene from './game-scene';
+import Death from './death';
 
+const IS_PRODUCTION = true
 
 const GameConfig: Phaser.Types.Core.GameConfig = {
-  title: 'ExampleGame',
-  url: 'https://github.com/digitsensitive/phaser3-typescript',
+  title: 'AwesomeSuperCoolPenis',
+  url: '',
   version: '2.0',
   width: 480,
   height: 640,
   type: Phaser.AUTO,
   parent: 'app',
-  // `as as Phaser.Types.Scenes.SettingsConfig[]` is required until https://github.com/photonstorm/phaser/pull/6235
-  scene: [GameScene],
+  scene: [GameScene, Death],
   input: {
     keyboard: true
   },
@@ -29,7 +30,7 @@ const GameConfig: Phaser.Types.Core.GameConfig = {
     default: 'arcade',
     arcade: {
       gravity: { y: 200 },
-      debug: true
+      debug: !IS_PRODUCTION
     }
   },
   backgroundColor: '#300000',

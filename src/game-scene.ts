@@ -75,6 +75,7 @@ export default class GameScene extends Phaser.Scene {
 		this.physics.add.overlap(
 			this.player,
 			this.carrots,
+   // @ts-ignore
 			this.handleCollectCarrot,
 			undefined,
 			this
@@ -128,6 +129,7 @@ export default class GameScene extends Phaser.Scene {
 		this.horizontalWrap(this.player)
 
 		const lowestPlatform = this.findLowestPlatform()
+  // @ts-ignore
 		if(this.player.y > lowestPlatform.y + 200){
 			this.scene.start('game-over')
 		}
@@ -158,6 +160,7 @@ export default class GameScene extends Phaser.Scene {
 		return carrot
 	}
 
+ // @ts-ignore
 	handleCollectCarrot(player: Phaser.Physics.Arcade.Sprite, carrot: Carrot) {
 		this.carrots.killAndHide(carrot)
 
@@ -177,6 +180,7 @@ export default class GameScene extends Phaser.Scene {
 		for(let i = 1; i < platforms.length; ++i){
 			const platform = platforms[i]
 
+   // @ts-ignore
 			if(platform.y < lowestPlatform.y){
 				continue
 			}
